@@ -1,0 +1,6 @@
+{
+  "name": "ArgumentCraft - Argumentative Introduction Builder",
+  "description": "An interactive writing studio for students to construct clear, compelling argumentative essay introductions using Background, Topic, and Stand with an integrated academic thesaurus.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
