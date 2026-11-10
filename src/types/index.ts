@@ -27,24 +27,6 @@ export interface ThesaurusWord {
   exampleSentence: string;
 }
 
-export interface ExemplarPrompt {
-  id: string;
-  title: string;
-  topicCategory: string;
-  promptQuestion: string;
-  background: string;
-  topic: string;
-  stand: string;
-  transitionBgToTopic: string;
-  transitionTopicToStand: string;
-  fullParagraph: string;
-  analysis: {
-    backgroundWhy: string;
-    topicWhy: string;
-    standWhy: string;
-  };
-}
-
 export interface SentenceStem {
   id: string;
   label: string;

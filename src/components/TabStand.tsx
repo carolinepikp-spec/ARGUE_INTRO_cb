@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Target, Sparkles, BookOpen, ChevronRight, ChevronLeft, HelpCircle } from 'lucide-react';
+import { Target, Sparkles, BookOpen, ChevronRight, ChevronLeft } from 'lucide-react';
 import { TAB_PEDAGOGY } from '../data/exemplarsData';
 import { ReadAloudButton } from './ReadAloudButton';
 import { LanguageTechniquesHelper } from './LanguageTechniquesHelper';
@@ -135,7 +135,7 @@ export const TabStand: React.FC<TabStandProps> = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={5}
-            placeholder="e.g. I strongly believe that schools must implement strict screen-time limits, because excessive phone use damages student focus and increases anxiety..."
+            placeholder="Write 1–2 sentences here stating your viewpoint (claim) and your main reasons..."
             className="w-full p-4 text-sm text-slate-900 bg-slate-50/40 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-700 focus:bg-white placeholder:text-slate-400 transition-all leading-relaxed"
           />
 

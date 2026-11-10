@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Layers, Sparkles, BookOpen, ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react';
+import { Layers, Sparkles, BookOpen, ChevronRight, ChevronLeft } from 'lucide-react';
 import { TAB_PEDAGOGY } from '../data/exemplarsData';
 import { ReadAloudButton } from './ReadAloudButton';
 import { LanguageTechniquesHelper } from './LanguageTechniquesHelper';
@@ -135,7 +135,7 @@ export const TabTopic: React.FC<TabTopicProps> = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={5}
-            placeholder="e.g. The main problem with excessive social media use is that it causes teenagers to lose sleep and experience intense anxiety. This situation cannot continue because young people are facing serious mental health crises every day..."
+            placeholder="Write 2–3 sentences here to introduce the problem with fast fashion and explain why this situation cannot continue..."
             className="w-full p-4 text-sm text-slate-900 bg-slate-50/40 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-700 focus:bg-white placeholder:text-slate-400 transition-all leading-relaxed"
           />
 

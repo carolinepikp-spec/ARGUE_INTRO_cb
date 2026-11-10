@@ -4,13 +4,12 @@
  */
 
 import React from 'react';
-import { BookOpen, Sparkles, BookMarked, HelpCircle, RotateCcw } from 'lucide-react';
+import { BookOpen, BookMarked, HelpCircle, RotateCcw } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: 'qa' | 'background' | 'topic' | 'stand' | 'generate';
   onSelectTab: (tab: 'qa' | 'background' | 'topic' | 'stand' | 'generate') => void;
   onOpenThesaurus: () => void;
-  onOpenExemplars: () => void;
   onOpenGuide: () => void;
   onReset: () => void;
   completedCount: number;
@@ -20,13 +19,12 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onSelectTab,
   onOpenThesaurus,
-  onOpenExemplars,
   onOpenGuide,
   onReset,
   completedCount,
 }) => {
   return (
-    <header className="flex items-center justify-between gap-8 px-6 py-4 bg-white border-b border-slate-200 sticky top-0 z-30">
+    <header className="flex items-center justify-between gap-4 sm:gap-8 px-4 sm:px-6 py-4 bg-white border-b border-slate-200 sticky top-0 z-30">
       {/* Zone 1: Single text element wordmark */}
       <div className="flex items-center gap-3 shrink-0">
         <a
@@ -66,14 +64,6 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         <button
           type="button"
-          onClick={onOpenExemplars}
-          className="flex items-center gap-1.5 hover:text-blue-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-        >
-          <Sparkles className="w-4 h-4 text-amber-600" />
-          <span>Sample Essays</span>
-        </button>
-        <button
-          type="button"
           onClick={onOpenGuide}
           className="flex items-center gap-1.5 hover:text-blue-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
         >
@@ -92,7 +82,16 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
 
       {/* Zone 3: 1 primary action */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={onReset}
+          className="md:hidden p-2 text-slate-500 hover:text-rose-600 rounded-lg border border-slate-200 transition-colors cursor-pointer"
+          title="Start Over"
+          aria-label="Start Over"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
         <button
           type="button"
           onClick={() => onSelectTab('generate')}

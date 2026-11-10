@@ -1,15 +1,23 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
-import {defineConfig} from 'vite';
+import path from 'node:path';
+import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
+    },
+    build: {
+      chunkSizeWarningLimit: 1000,
+    },
+    preview: {
+      port: 3000,
+      host: '0.0.0.0',
+      allowedHosts: true as const,
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

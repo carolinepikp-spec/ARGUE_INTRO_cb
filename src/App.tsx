@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Compass,
   Layers,
@@ -12,9 +12,6 @@ import {
   BookOpen,
   CheckCircle2,
   HelpCircle,
-  RotateCcw,
-  BookMarked,
-  ArrowRight,
 } from 'lucide-react';
 
 import { Header } from './components/Header';
@@ -24,17 +21,14 @@ import { TabTopic } from './components/TabTopic';
 import { TabStand } from './components/TabStand';
 import { TabGenerate } from './components/TabGenerate';
 import { ThesaurusDrawer } from './components/ThesaurusDrawer';
-import { ExemplarsModal } from './components/ExemplarsModal';
 import { GuideModal } from './components/GuideModal';
-import { ExemplarPrompt } from './types';
-import { SAMPLE_EXEMPLARS, TRANSITION_PRESETS } from './data/exemplarsData';
 
-const STORAGE_KEY = 'argumentcraft_draft_v1';
+const STORAGE_KEY = 'argumentcraft_student_draft_v2';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'qa' | 'background' | 'topic' | 'stand' | 'generate'>('background');
 
-  // Core Essay Draft State
+  // Core Student Essay Draft State (always starts blank for students' own work)
   const [background, setBackground] = useState<string>('');
   const [topic, setTopic] = useState<string>('');
   const [stand, setStand] = useState<string>('');
@@ -42,32 +36,26 @@ export default function App() {
   // Modals & Panels
   const [isThesaurusOpen, setIsThesaurusOpen] = useState(false);
   const [thesaurusQuery, setThesaurusQuery] = useState('');
-  const [isExemplarsOpen, setIsExemplarsOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Load from local storage on mount, or preload Primary 6 Fast Fashion topic
+  // Load only the student's own saved work from local storage
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.background) setBackground(parsed.background);
-        if (parsed.topic) setTopic(parsed.topic);
-        if (parsed.stand) setStand(parsed.stand);
-      } else {
-        // Pre-populate with Primary 6 Fast Fashion topic as requested!
-        const defaultExemplar = SAMPLE_EXEMPLARS[0];
-        setBackground(defaultExemplar.background);
-        setTopic(defaultExemplar.topic);
-        setStand(defaultExemplar.stand);
+        if (typeof parsed.background === 'string') setBackground(parsed.background);
+        if (typeof parsed.topic === 'string') setTopic(parsed.topic);
+        if (typeof parsed.stand === 'string') setStand(parsed.stand);
       }
     } catch {
       // Ignore parse errors
     }
   }, []);
 
-  // Save to local storage on change
+  // Save student draft to local storage on change
   useEffect(() => {
     try {
       const payload = {
@@ -107,27 +95,18 @@ export default function App() {
     }
   };
 
-  const handleLoadExemplar = (exemplar: ExemplarPrompt) => {
-    setBackground(exemplar.background);
-    setTopic(exemplar.topic);
-    setStand(exemplar.stand);
-    setActiveTab('generate');
-    showToast(`Loaded: "${exemplar.title}"`);
-  };
-
-  const handleResetDraft = () => {
-    if (window.confirm('Do you want to clear this draft and start fresh?')) {
-      setBackground('');
-      setTopic('');
-      setStand('');
-      setActiveTab('background');
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch {
-        // Ignore
-      }
-      showToast('Draft cleared! Ready for new sentences.');
+  const handleConfirmReset = () => {
+    setBackground('');
+    setTopic('');
+    setStand('');
+    setActiveTab('background');
+    setIsResetConfirmOpen(false);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Ignore
     }
+    showToast('Draft cleared! Ready for your own sentences.');
   };
 
   const completedCount = [
@@ -143,9 +122,8 @@ export default function App() {
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onOpenThesaurus={() => handleOpenThesaurus()}
-        onOpenExemplars={() => setIsExemplarsOpen(true)}
         onOpenGuide={() => setIsGuideOpen(true)}
-        onReset={handleResetDraft}
+        onReset={() => setIsResetConfirmOpen(true)}
         completedCount={completedCount}
       />
 
@@ -162,7 +140,7 @@ export default function App() {
                 Topic: Is It Time to Put an End to Fast Fashion?
               </h1>
               <p className="text-xs text-emerald-100/90 pt-0.5">
-                Build your introduction step-by-step: <strong>1. Background</strong> (Overview) → <strong>2. Topic</strong> (Problem) → <strong>3. Stand</strong> (Your Claim)
+                Write your own introduction step-by-step: <strong>1. Background</strong> (Overview) → <strong>2. Topic</strong> (Problem) → <strong>3. Stand</strong> (Your Claim)
               </p>
             </div>
 
@@ -177,18 +155,10 @@ export default function App() {
               </button>
               <button
                 type="button"
-                onClick={() => handleLoadExemplar(SAMPLE_EXEMPLARS[0])}
-                className="px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-lg shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                <span>Load Fast Fashion Model</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsExemplarsOpen(true)}
+                onClick={() => setIsGuideOpen(true)}
                 className="px-3 py-1.5 text-xs font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Other P6 Topics</span>
+                <span>Writing Tips</span>
               </button>
             </div>
           </div>
@@ -270,7 +240,7 @@ export default function App() {
               )}
             </div>
             <span className="text-xs font-medium truncate">
-              Problem & Debate
+              Problem &amp; Debate
             </span>
           </button>
 
@@ -294,7 +264,7 @@ export default function App() {
               )}
             </div>
             <span className="text-xs font-medium truncate">
-              Viewpoint & Claim
+              Viewpoint &amp; Claim
             </span>
           </button>
 
@@ -371,7 +341,6 @@ export default function App() {
             topic={topic}
             stand={stand}
             onJumpToTab={(tab) => setActiveTab(tab)}
-            onOpenThesaurus={handleOpenThesaurus}
           />
         )}
       </main>
@@ -405,19 +374,42 @@ export default function App() {
         }
       />
 
-      {/* 7. Exemplars Modal */}
-      <ExemplarsModal
-        isOpen={isExemplarsOpen}
-        onClose={() => setIsExemplarsOpen(false)}
-        onLoadExemplar={handleLoadExemplar}
-      />
-
-      {/* 8. Guide Modal */}
+      {/* 7. Guide Modal */}
       <GuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
+
+      {/* 8. Clear Draft Confirmation Modal (avoids window.confirm in iframe) */}
+      {isResetConfirmOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-4">
+            <h3 className="text-base font-bold text-slate-900">
+              Start Over?
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              This will clear your Background, Topic, and Stand sentences so you can start writing a brand new draft.
+            </p>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsResetConfirmOpen(false)}
+                className="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
+              >
+                Keep My Work
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmReset}
+                className="px-4 py-2 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg cursor-pointer"
+              >
+                Clear Everything
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 9. Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg shadow-xl flex items-center gap-2 border border-slate-700 animate-fade-in">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg shadow-xl flex items-center gap-2 border border-slate-700">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>

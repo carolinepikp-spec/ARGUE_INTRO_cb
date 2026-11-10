@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { Sparkles, HelpCircle, Heart, ShieldCheck, Plus, Check } from 'lucide-react';
-import { LANGUAGE_TECHNIQUES, LanguageTechnique } from '../data/exemplarsData';
+import { LANGUAGE_TECHNIQUES } from '../data/exemplarsData';
 
 interface LanguageTechniquesHelperProps {
   onInsertText: (text: string) => void;

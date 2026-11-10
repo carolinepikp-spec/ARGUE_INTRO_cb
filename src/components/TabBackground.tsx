@@ -133,7 +133,7 @@ export const TabBackground: React.FC<TabBackgroundProps> = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={5}
-            placeholder="e.g. In today’s world, social media has become a major part of everyday life. For many years, teenagers communicated mostly in person, but recently digital platforms have completely changed how youth connect..."
+            placeholder="Write 2–3 sentences here to give readers an overview of fast fashion (a real-world scenario, history, or strong fact)..."
             className="w-full p-4 text-sm text-slate-900 bg-slate-50/40 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:bg-white placeholder:text-slate-400 transition-all leading-relaxed"
           />
 

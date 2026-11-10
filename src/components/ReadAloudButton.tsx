@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Volume2, Pause, Play, Square, VolumeX } from 'lucide-react';
+import { Volume2, Play, Square } from 'lucide-react';
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 
 interface ReadAloudButtonProps {

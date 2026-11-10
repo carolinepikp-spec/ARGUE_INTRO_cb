@@ -17,7 +17,6 @@ import {
   RotateCcw,
   Volume2,
 } from 'lucide-react';
-import { TAB_PEDAGOGY } from '../data/exemplarsData';
 import { ReadAloudButton } from './ReadAloudButton';
 
 interface TabGenerateProps {
@@ -25,7 +24,6 @@ interface TabGenerateProps {
   topic: string;
   stand: string;
   onJumpToTab: (tab: 'background' | 'topic' | 'stand') => void;
-  onOpenThesaurus: (word?: string) => void;
 }
 
 export const TabGenerate: React.FC<TabGenerateProps> = ({
@@ -33,13 +31,11 @@ export const TabGenerate: React.FC<TabGenerateProps> = ({
   topic,
   stand,
   onJumpToTab,
-  onOpenThesaurus,
 }) => {
   const [viewMode, setViewMode] = useState<'annotated' | 'essay'>('annotated');
   const [isCopied, setIsCopied] = useState(false);
   const [customEdits, setCustomEdits] = useState<string | null>(null);
-
-  const pedagogy = TAB_PEDAGOGY.generate;
+  const [isEditingPlain, setIsEditingPlain] = useState(false);
 
   // Helper to ensure each section ends with a period, question mark, or exclamation mark
   const ensurePunctuation = (text: string) => {
@@ -365,25 +361,32 @@ export const TabGenerate: React.FC<TabGenerateProps> = ({
         ) : (
           /* Plain Essay View */
           <div className="space-y-3">
-            <div className="p-8 bg-white rounded-xl border border-slate-300 shadow-inner font-serif text-slate-900 text-lg leading-loose indent-8 selection:bg-blue-100">
-              {assembledParagraph || (
-                <span className="text-slate-400 italic">
-                  Your complete introduction paragraph will appear here once you write your 3 parts.
-                </span>
-              )}
-            </div>
+            {isEditingPlain ? (
+              <textarea
+                value={assembledParagraph}
+                onChange={(e) => setCustomEdits(e.target.value)}
+                rows={6}
+                placeholder="Write or polish your introduction paragraph here..."
+                className="w-full p-6 bg-white rounded-xl border-2 border-blue-600 font-serif text-slate-900 text-lg leading-loose focus:outline-none"
+              />
+            ) : (
+              <div className="p-8 bg-white rounded-xl border border-slate-300 shadow-inner font-serif text-slate-900 text-lg leading-loose indent-8 selection:bg-blue-100">
+                {assembledParagraph || (
+                  <span className="text-slate-400 italic">
+                    Your complete introduction paragraph will appear here once you write your 3 parts.
+                  </span>
+                )}
+              </div>
+            )}
             <div className="flex items-center justify-between text-xs text-slate-500">
               <span>Ready for your essay!</span>
               <button
                 type="button"
-                onClick={() => {
-                  const input = prompt('Type your changes below:', assembledParagraph);
-                  if (input !== null) setCustomEdits(input);
-                }}
+                onClick={() => setIsEditingPlain((prev) => !prev)}
                 className="text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 cursor-pointer"
               >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Type directly in paragraph</span>
+                {isEditingPlain ? <Check className="w-3.5 h-3.5" /> : <Edit3 className="w-3.5 h-3.5" />}
+                <span>{isEditingPlain ? 'Done Editing' : 'Edit Paragraph Directly'}</span>
               </button>
             </div>
           </div>

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { X, HelpCircle, Compass, Layers, Target, Sparkles } from 'lucide-react';
+import { X, HelpCircle, Compass, Layers, Target } from 'lucide-react';
 import { TAB_PEDAGOGY } from '../data/exemplarsData';
 
 interface GuideModalProps {
